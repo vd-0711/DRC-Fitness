@@ -4,13 +4,15 @@ import { InstagramIcon } from './InstagramIcon';
 import { WHATSAPP_URL, STUDIO_PHONE_LINK, INSTAGRAM_LINK } from '../lib/constants';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 
+import { Marquee } from './Marquee';
+
 export function Footer() {
   const [ref, isIntersecting] = useIntersectionObserver({ threshold: 0.1 });
 
   return (
     <footer className="footer" ref={ref}>
-      <div className={`footer-mega fade-up ${isIntersecting ? "visible" : ""}`}>
-        Drive<em>.</em> Rebuild<em>.</em> Conquer<em>.</em>
+      <div className={`fade-up ${isIntersecting ? "visible" : ""}`} style={{ margin: '0 -40px 40px' }}>
+        <Marquee />
       </div>
       <div className={`footer-bottom fade-up ${isIntersecting ? "visible" : ""}`} style={{ transitionDelay: "200ms" }}>
         <div>© {new Date().getFullYear()} DRC Fitness · Pune · All rights reserved</div>

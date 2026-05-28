@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { equipment } from '../lib/constants';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
+import { LoopVideo } from './LoopVideo';
 
 function EquipCard({ e, i }) {
   const cardRef = useRef(null);
@@ -12,11 +13,11 @@ function EquipCard({ e, i }) {
     setIsDesktop(window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 1024px)").matches);
   }, []);
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (event) => {
     if (!isDesktop || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
@@ -35,17 +36,26 @@ function EquipCard({ e, i }) {
 
   return (
     <div 
-      className="equip-card"
+      className={`equip-card ${e.videoSrc ? 'has-video' : ''}`}
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ transform, transition: isHovered ? 'none' : 'transform 0.5s ease' }}
     >
+      {e.videoSrc && (
+        <LoopVideo 
+          src={e.videoSrc}
+          poster={e.poster}
+          className="equip-video-bg"
+          lazyPlay={true}
+          overlay={<div className="equip-video-overlay" />}
+        />
+      )}
       <div className="equip-card-content">
         <div className="equip-num">{String(i + 1).padStart(2, "0")}</div>
         <div>
-          <div className="equip-name">{e}</div>
+          <div className="equip-name">{e.name}</div>
           <div className="equip-tag" style={{ marginTop: 12 }}>
             {i < 3 ? "Performance Suite" : i < 6 ? "Strength Suite" : "Recovery & Support"}
           </div>
@@ -69,12 +79,16 @@ export function Equipment() {
         introduced in Pune for the first time at DRC. Every piece was chosen because it lets
         you load, move, and recover with a precision the average gym floor doesn't allow.
       </p>
-      <div className="equip-grid" style={{ marginTop: 60 }}>
-        {equipment.map((e, i) => (
-          <div className={`fade-up ${isIntersecting ? "visible" : ""}`} style={{ transitionDelay: `${200 + (i % 3) * 100}ms` }} key={e}>
-            <EquipCard e={e} i={i} />
-          </div>
-        ))}
+      
+      {/* Horizontal scrolling wrapper */}
+      <div className="equip-scroll-wrapper" style={{ marginTop: 60 }}>
+        <div className="equip-grid">
+          {equipment.map((e, i) => (
+            <div className={`fade-up ${isIntersecting ? "visible" : ""}`} style={{ transitionDelay: `${200 + (i % 3) * 100}ms` }} key={e.name}>
+              <EquipCard e={e} i={i} />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

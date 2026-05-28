@@ -9,6 +9,7 @@ import { useScrolled } from './hooks/useScrolled';
 import { ProgressBar } from './components/ProgressBar';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
+import { ShowcaseVideo } from './components/ShowcaseVideo';
 import { Marquee } from './components/Marquee';
 import { Philosophy } from './components/Philosophy';
 import { Services } from './components/Services';
@@ -33,6 +34,7 @@ export default function DRCFitness() {
 
       <main>
         <Hero time={time} />
+        <ShowcaseVideo />
         <Marquee />
         <Philosophy />
         <Services />

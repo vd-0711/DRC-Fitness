@@ -20,9 +20,15 @@ export const services = [
 ];
 
 export const equipment = [
-  "Technogym Skillrun", "Technogym Kinesis", "Olympic Platform",
-  "Specialty Bars", "Glute Drive", "Pneumatic Resistance",
-  "Skillmill", "Free Weights", "Recovery Suite",
+  { name: "Technogym Skillrun", videoSrc: "/video/equipment-01.mp4", poster: "/video/equipment-01-poster.jpg" },
+  { name: "Technogym Kinesis", videoSrc: "/video/equipment-02.mp4", poster: "/video/equipment-02-poster.jpg" },
+  { name: "Olympic Platform", videoSrc: "/video/equipment-03.mp4", poster: "/video/equipment-03-poster.jpg" },
+  { name: "Specialty Bars", videoSrc: "/video/equipment-04.mp4", poster: "/video/equipment-04-poster.jpg" },
+  { name: "Glute Drive", videoSrc: "/video/equipment-05.mp4", poster: "/video/equipment-05-poster.jpg" },
+  { name: "Pneumatic Resistance", videoSrc: "/video/equipment-06.mp4", poster: "/video/equipment-06-poster.jpg" },
+  { name: "Skillmill" },
+  { name: "Free Weights" },
+  { name: "Recovery Suite" },
 ];
 
 export const testimonials = [

@@ -7,8 +7,17 @@ export function Trainer() {
   return (
     <section className="trainer" id="trainer" ref={ref}>
       <div className={`trainer-meta fade-up ${isIntersecting ? "visible" : ""}`}>
-        <div className="trainer-photo-block">
-          <span className="trainer-photo-label">Founder · Head Coach</span>
+        <div className="trainer-photo-block" style={{ background: 'var(--ember)', padding: 0 }}>
+          <img 
+            src="/trainer.png" 
+            alt="Durgesh - Founder and Head Coach" 
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.parentElement.classList.add('trainer-placeholder');
+            }}
+          />
+          <span className="trainer-photo-label" style={{ position: 'absolute', bottom: '24px', left: '32px' }}>Founder · Head Coach</span>
         </div>
         <div className="trainer-name">Durgesh</div>
         <div className="trainer-role">Founder · Head Coach · DRC Fitness</div>

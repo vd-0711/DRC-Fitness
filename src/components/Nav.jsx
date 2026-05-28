@@ -27,7 +27,7 @@ export function Nav({ scrolled, activeSection }) {
           <button className={`nav-link ${activeSection === "trainer" ? "active" : ""}`} onClick={(e) => scrollTo(e, "trainer")}>Trainer</button>
           <button className={`nav-link ${activeSection === "equipment" ? "active" : ""}`} onClick={(e) => scrollTo(e, "equipment")}>Equipment</button>
           <button className={`nav-link ${activeSection === "visit" ? "active" : ""}`} onClick={(e) => scrollTo(e, "visit")}>Visit</button>
-          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="nav-cta">
+          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="nav-cta desktop-only">
             <MessageCircle size={14} /> Book a Session
           </a>
         </div>
