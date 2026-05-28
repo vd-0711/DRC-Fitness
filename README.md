@@ -10,6 +10,10 @@ When the site is built, these files are served from the root URL.
   - File: `/public/trainer.png`
   - Note: This should be a cut-out image with a transparent background. It will automatically sit on top of the orange background block in the Trainer section.
 
+- **Logo**:
+  - File: `/public/logo.png` (or `.svg` if you change the file extension in `src/components/Nav.jsx`).
+  - Note: Save your logo image with a transparent background so it looks perfect against the dark navigation bar. If no image is provided, the site gracefully falls back to displaying the text "DRC.Fitness".
+
 ## 2. Updating Videos
 All videos should be placed in the `/public/video/` directory. The site uses a robust fallback system, meaning if a video isn't there, it simply won't break the layout.
 

@@ -20,7 +20,18 @@ export function Nav({ scrolled, activeSection }) {
         aria-hidden="true"
       />
       <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-        <button className="nav-logo" onClick={(e) => scrollTo(e, "top")}>DRC<span className="dot">.</span>Fitness</button>
+        <button className="nav-logo" onClick={(e) => scrollTo(e, "top")}>
+          <img 
+            src="/logo.png" 
+            alt="DRC Fitness" 
+            className="nav-logo-img" 
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextElementSibling.style.display = 'inline';
+            }}
+          />
+          <span className="nav-logo-fallback" style={{ display: 'none' }}>DRC<span className="dot">.</span>Fitness</span>
+        </button>
         <div className={`nav-links ${menuOpen ? "open" : ""}`}>
           <button className={`nav-link ${activeSection === "philosophy" ? "active" : ""}`} onClick={(e) => scrollTo(e, "philosophy")}>Philosophy</button>
           <button className={`nav-link ${activeSection === "services" ? "active" : ""}`} onClick={(e) => scrollTo(e, "services")}>Training</button>
