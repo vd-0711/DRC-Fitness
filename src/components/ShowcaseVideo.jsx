@@ -10,7 +10,6 @@ export function ShowcaseVideo() {
       <div className={`fade-up ${isIntersecting ? "visible" : ""}`} style={{ width: '100%', height: '100%' }}>
         <LoopVideo 
           src="/video/showcase.mp4"
-          srcMobile="/video/showcase-mobile.mp4"
           poster="/video/showcase-poster.jpg"
           lazyPlay={true}
           className="w-full h-full"
