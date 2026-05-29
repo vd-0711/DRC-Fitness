@@ -26,9 +26,9 @@ export const equipment = [
   { name: "Specialty Bars", videoSrc: "/video/equipment-04.mp4", poster: "/video/equipment-04-poster.jpg" },
   { name: "Glute Drive", videoSrc: "/video/equipment-05.mp4", poster: "/video/equipment-05-poster.jpg" },
   { name: "Pneumatic Resistance", videoSrc: "/video/equipment-06.mp4", poster: "/video/equipment-06-poster.jpg" },
-  { name: "Skillmill" },
-  { name: "Free Weights" },
-  { name: "Recovery Suite" },
+  { name: "Skillmill", videoSrc: "/video/equipment-07.mp4", poster: "/video/equipment-07-poster.jpg" },
+  { name: "Free Weights", videoSrc: "/video/equipment-08.mp4", poster: "/video/equipment-08-poster.jpg" },
+  { name: "Recovery Suite", videoSrc: "/video/equipment-09.mp4", poster: "/video/equipment-09-poster.jpg" },
 ];
 
 export const testimonials = [

@@ -66,7 +66,7 @@ export function LoopVideo({
     <div 
       ref={targetRef} 
       className={`loop-video-wrapper ${className}`} 
-      style={{ aspectRatio, position: 'relative', overflow: 'hidden' }}
+      style={{ aspectRatio, position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}
     >
       {!error && (
         <video
