@@ -1,12 +1,13 @@
-export const WHATSAPP_NUMBER = "918983385345"; // intl format, no +
+export const WHATSAPP_NUMBER = "919371036616"; // studio line — same number for call + WhatsApp, intl format, no +
 export const WHATSAPP_MSG = encodeURIComponent(
   "Hi DRC Fitness! I'd like to book a trial session. Please let me know available slots."
 );
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`;
 
 export const STUDIO_ADDRESS_LINK = "https://www.google.com/maps/place/?q=place_id:ChIJCUgmCSzBwjsRzXshCZDBfl8";
-export const STUDIO_PHONE = "+919371036616";
-export const STUDIO_PHONE_LINK = "tel:+919371036616";
+// Studio phone is the same line as WhatsApp — one number for call + chat.
+export const STUDIO_PHONE = "+91 89833 85345";
+export const STUDIO_PHONE_LINK = `tel:+${WHATSAPP_NUMBER}`;
 export const INSTAGRAM_LINK = "https://www.instagram.com/drcfitnesspune/";
 export const REVIEWS_LINK = "https://search.google.com/local/reviews?placeid=ChIJCUgmCSzBwjsRzXshCZDBfl8";
 
@@ -19,16 +20,19 @@ export const services = [
   { n: "06", id: "theragun-recovery", t: "Theragun Recovery", d: "Percussive therapy integrated into your session. Recover faster, move better, train harder tomorrow." },
 ];
 
+// Equipment is photo-first. Drop portrait images (≈1200×1500, 4:5) into
+// /public/equipment/ as equip-01.jpg … equip-09.jpg. If a file is missing the
+// card degrades gracefully to a brushed-metal panel with the name.
 export const equipment = [
-  { name: "Technogym Skillrun", videoSrc: "/video/equipment-01.mp4", poster: "/video/equipment-01-poster.jpg" },
-  { name: "Technogym Kinesis", videoSrc: "/video/equipment-02.mp4", poster: "/video/equipment-02-poster.jpg" },
-  { name: "Olympic Platform", videoSrc: "/video/equipment-03.mp4", poster: "/video/equipment-03-poster.jpg" },
-  { name: "Specialty Bars", videoSrc: "/video/equipment-04.mp4", poster: "/video/equipment-04-poster.jpg" },
-  { name: "Glute Drive", videoSrc: "/video/equipment-05.mp4", poster: "/video/equipment-05-poster.jpg" },
-  { name: "Pneumatic Resistance", videoSrc: "/video/equipment-06.mp4", poster: "/video/equipment-06-poster.jpg" },
-  { name: "Skillmill", videoSrc: "/video/equipment-07.mp4", poster: "/video/equipment-07-poster.jpg" },
-  { name: "Free Weights", videoSrc: "/video/equipment-08.mp4", poster: "/video/equipment-08-poster.jpg" },
-  { name: "Recovery Suite", videoSrc: "/video/equipment-09.mp4", poster: "/video/equipment-09-poster.jpg" },
+  { name: "Technogym Skillrun", img: "/equipment/equip-01.jpg", cat: "Performance" },
+  { name: "Ski Trainer", img: "/equipment/equip-02.jpg", cat: "Performance" },
+  { name: "Functional Trainer", img: "/equipment/equip-03.jpg", cat: "Functional" },
+  { name: "Lat Pulldown", img: "/equipment/equip-04.jpg", cat: "Strength" },
+  { name: "Smith Machine", img: "/equipment/equip-05.jpg", cat: "Strength" },
+  { name: "Dual Adjustable Pulley", img: "/equipment/equip-06.jpg", cat: "Functional" },
+  { name: "Cable Column", img: "/equipment/equip-07.jpg", cat: "Functional" },
+  { name: "Free Weights", img: "/equipment/equip-08.jpg", cat: "Strength" },
+  { name: "Leg Press", img: "/equipment/equip-09.jpg", cat: "Strength" },
 ];
 
 export const testimonials = [

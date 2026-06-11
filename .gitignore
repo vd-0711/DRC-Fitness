@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Full-resolution source media (compressed copies live in /public). Large; keep
+# locally but out of git and out of the deploy.
+raw-assets
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

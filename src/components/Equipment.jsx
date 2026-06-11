@@ -1,93 +1,97 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { equipment } from '../lib/constants';
-import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
-import { LoopVideo } from './LoopVideo';
+import { useGsapReveal } from '../hooks/useGsapReveal';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function EquipCard({ e, i }) {
-  const cardRef = useRef(null);
-  const [transform, setTransform] = useState("none");
-  const [isHovered, setIsHovered] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  useEffect(() => {
-    setIsDesktop(window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 1024px)").matches);
-  }, []);
-
-  const handleMouseMove = (event) => {
-    if (!isDesktop || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    // Max rotation 6deg
-    const rotateX = ((y - centerY) / centerY) * -6;
-    const rotateY = ((x - centerX) / centerX) * 6;
-    
-    setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`);
-  };
-
-  const handleMouseEnter = () => setIsHovered(true);
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    setTransform("none");
-  };
-
+  const [imgOk, setImgOk] = useState(true);
   return (
-    <div 
-      className={`equip-card ${e.videoSrc ? 'has-video' : ''}`}
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{ transform, transition: isHovered ? 'none' : 'transform 0.5s ease' }}
-    >
-      {e.videoSrc && (
-        <LoopVideo 
-          src={e.videoSrc}
-          poster={e.poster}
-          className="equip-video-bg"
-          lazyPlay={true}
-          overlay={<div className="equip-video-overlay" />}
-        />
+    <article className={`equip-card ${imgOk ? 'has-photo' : ''}`}>
+      {imgOk && (
+        <div className="equip-media">
+          <img src={e.img} alt={e.name} loading="lazy" onError={() => setImgOk(false)} />
+        </div>
       )}
+      <div className="equip-overlay" aria-hidden="true" />
       <div className="equip-card-content">
-        <div className="equip-num">{String(i + 1).padStart(2, "0")}</div>
+        <span className="equip-num">{String(i + 1).padStart(2, '0')}</span>
         <div>
           <div className="equip-name">{e.name}</div>
-          <div className="equip-tag" style={{ marginTop: 12 }}>
-            {i < 3 ? "Performance Suite" : i < 6 ? "Strength Suite" : "Recovery & Support"}
-          </div>
+          <div className="equip-tag">{e.cat}</div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
 
 export function Equipment() {
-  const [ref, isIntersecting] = useIntersectionObserver();
+  const revealRef = useGsapReveal();
+  const pinRef = useRef(null);
+  const trackRef = useRef(null);
+  const [pinned, setPinned] = useState(false);
+
+  // Desktop: pin the section and scrub the track horizontally as you scroll.
+  // Touch / reduced-motion / narrow: fall back to native horizontal scroll.
+  useEffect(() => {
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!fine || reduced || window.innerWidth < 1024) return;
+
+    setPinned(true);
+    let ctx;
+    // Defer one frame so images/layout settle before measuring scrollWidth.
+    const id = requestAnimationFrame(() => {
+      const pin = pinRef.current;
+      const track = trackRef.current;
+      if (!pin || !track) return;
+      ctx = gsap.context(() => {
+        const distance = () => Math.max(0, track.scrollWidth - window.innerWidth + 80);
+        ScrollTrigger.create({
+          trigger: pin,
+          start: 'top top',
+          end: () => '+=' + distance(),
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+          animation: gsap.to(track, { x: () => -distance(), ease: 'none' }),
+        });
+      });
+    });
+    return () => {
+      cancelAnimationFrame(id);
+      ctx?.revert();
+      setPinned(false);
+    };
+  }, []);
 
   return (
-    <section className="equipment" id="equipment" ref={ref}>
-      <div className={`section-head fade-up ${isIntersecting ? "visible" : ""}`}>
-        <div><div className="mono-label section-num">— 04 / Equipment</div></div>
-        <h2 className="section-title">Apparatus that <em>earns</em> its floor space.</h2>
+    <section className="equipment" id="equipment" ref={revealRef}>
+      <div className="section-head">
+        <div className="section-kicker">
+          <span className="section-ghost" aria-hidden="true">03</span>
+          <span className="mono-label section-num" data-reveal>Equipment</span>
+        </div>
+        <h2 className="section-title" data-reveal>Apparatus that <em>earns</em> its floor space.</h2>
       </div>
-      <p className={`equip-note fade-up ${isIntersecting ? "visible" : ""}`} style={{ transitionDelay: "100ms" }}>
+      <p className="equip-note" data-reveal>
         Our studio features <em>Technogym</em> machines and specialised equipment — several
         introduced in Pune for the first time at DRC. Every piece was chosen because it lets
         you load, move, and recover with a precision the average gym floor doesn't allow.
       </p>
-      
-      {/* Horizontal scrolling wrapper */}
-      <div className="equip-scroll-wrapper" style={{ marginTop: 60 }}>
-        <div className="equip-grid">
+
+      <div className={`equip-pin ${pinned ? 'is-pinned' : ''}`} ref={pinRef}>
+        <div className="equip-track" ref={trackRef}>
           {equipment.map((e, i) => (
-            <div className={`fade-up ${isIntersecting ? "visible" : ""}`} style={{ transitionDelay: `${200 + (i % 3) * 100}ms` }} key={e.name}>
-              <EquipCard e={e} i={i} />
-            </div>
+            <EquipCard e={e} i={i} key={e.name} />
           ))}
+          <div className="equip-end">
+            <span className="equip-end-plus">+</span>
+            <span className="equip-end-text serif">and many<br />more</span>
+            <span className="mono-label" style={{ opacity: 0.6 }}>On the floor at DRC</span>
+          </div>
         </div>
       </div>
     </section>
