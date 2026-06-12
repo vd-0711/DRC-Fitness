@@ -6,7 +6,7 @@ export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MS
 
 export const STUDIO_ADDRESS_LINK = "https://www.google.com/maps/place/?q=place_id:ChIJCUgmCSzBwjsRzXshCZDBfl8";
 // Studio phone is the same line as WhatsApp — one number for call + chat.
-export const STUDIO_PHONE = "+91 89833 85345";
+export const STUDIO_PHONE = "+91 93710 36616";
 export const STUDIO_PHONE_LINK = `tel:+${WHATSAPP_NUMBER}`;
 export const INSTAGRAM_LINK = "https://www.instagram.com/drcfitnesspune/";
 export const REVIEWS_LINK = "https://search.google.com/local/reviews?placeid=ChIJCUgmCSzBwjsRzXshCZDBfl8";

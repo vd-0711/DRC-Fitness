@@ -8,7 +8,7 @@ const LINKS = [
   { id: 'services', label: 'Training' },
   { id: 'trainer', label: 'Trainer' },
   { id: 'equipment', label: 'Equipment' },
-  { id: 'gallery', label: 'Gallery' },
+  { id: 'gallery', label: 'Gallery', href: '/gallery.html' },
   { id: 'visit', label: 'Visit' },
 ];
 
@@ -39,15 +39,21 @@ export function Nav({ scrolled, activeSection }) {
           <span className="nav-logo-text chrome-text">DRC<span className="dot">.</span>Fitness</span>
         </button>
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
-          {LINKS.map((l) => (
-            <button
-              key={l.id}
-              className={`nav-link ${activeSection === l.id ? 'active' : ''}`}
-              onClick={() => go(l.id)}
-            >
-              {l.label}
-            </button>
-          ))}
+          {LINKS.map((l) =>
+            l.href ? (
+              <a key={l.id} className="nav-link" href={l.href}>
+                {l.label}
+              </a>
+            ) : (
+              <button
+                key={l.id}
+                className={`nav-link ${activeSection === l.id ? 'active' : ''}`}
+                onClick={() => go(l.id)}
+              >
+                {l.label}
+              </button>
+            )
+          )}
           <a
             ref={ctaRef}
             href={WHATSAPP_URL}

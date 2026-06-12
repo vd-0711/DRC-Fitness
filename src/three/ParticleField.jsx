@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { getParticleCount } from '../lib/capabilities';
 
@@ -106,12 +107,14 @@ const FRAG = /* glsl */ `
   }
 `;
 
-function Particles({ count }) {
+function Particles({ count, onWord }) {
   const { viewport } = useThree();
   const pointsRef = useRef();
   const matRef = useRef();
   const mouse = useRef({ x: 0, y: 0 });
   const anim = useRef({ form: 0, mix: 0, shapeIndex: 0, nextIndex: 0, morphing: false, timer: 0 });
+  const onWordRef = useRef(onWord);
+  useEffect(() => { onWordRef.current = onWord; }, [onWord]);
 
   const { geometry, shapes } = useMemo(() => {
     const shapeBuffers = WORDS.map((w) => sampleText(w, count));
@@ -140,7 +143,7 @@ function Particles({ count }) {
       uMix: { value: 0 },
       uMouse: { value: new THREE.Vector2() },
       uMouseStrength: { value: 0.16 },
-      uSize: { value: count > 7000 ? 2.8 : 3.2 },
+      uSize: { value: count > 7000 ? 4.0 : 4.6 },
       uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 1.75) },
       uEmber: { value: new THREE.Color('#ff6a00') },
       uEmberBright: { value: new THREE.Color('#ff9a3c') },
@@ -195,6 +198,7 @@ function Particles({ count }) {
         const attrB = geometry.attributes.aTargetB;
         attrB.array.set(shapes[a.nextIndex]);
         attrB.needsUpdate = true;
+        if (onWordRef.current) onWordRef.current(WORDS[a.nextIndex]);
       }
       if (a.morphing) {
         a.mix += dt / MORPH_TIME;
@@ -227,10 +231,87 @@ function Particles({ count }) {
   );
 }
 
-export default function ParticleField() {
+// Brand-scheme materials: chrome (white/silver) + iron (near-black); the only
+// colour comes from the ember light. Keeps the floating gym objects on-palette.
+function Chrome(props) {
+  return <meshStandardMaterial color="#d8d8e0" metalness={1} roughness={0.16} envMapIntensity={1.35} {...props} />;
+}
+function Iron(props) {
+  return <meshStandardMaterial color="#262420" metalness={0.82} roughness={0.44} {...props} />;
+}
+
+// Slow float + spin wrapper for any gym object.
+function Floating({ position, scale = 1, speed = 1, tilt = 0, children }) {
+  const ref = useRef();
+  const seed = useRef(Math.random() * Math.PI * 2);
+  useFrame((state) => {
+    const g = ref.current;
+    if (!g) return;
+    const t = state.clock.elapsedTime * speed + seed.current;
+    g.rotation.y = t * 0.45;
+    g.rotation.x = tilt + Math.sin(t * 0.6) * 0.22;
+    g.position.y = position[1] + Math.sin(t * 0.8) * 20;
+  });
+  return <group ref={ref} position={position} scale={scale}>{children}</group>;
+}
+
+function DumbbellMesh() {
+  const plate = (x) => (
+    <group position={[x, 0, 0]}>
+      <mesh rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[24, 24, 13, 32]} /><Iron /></mesh>
+      <mesh rotation={[0, 0, Math.PI / 2]} position={[x > 0 ? -10 : 10, 0, 0]}><cylinderGeometry args={[16, 16, 11, 32]} /><Iron color="#34312b" /></mesh>
+    </group>
+  );
+  return (
+    <group>
+      <mesh rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[6.5, 6.5, 94, 28]} /><Chrome /></mesh>
+      {plate(34)}{plate(-34)}
+    </group>
+  );
+}
+
+function KettlebellMesh() {
+  return (
+    <group>
+      <mesh position={[0, -8, 0]}><sphereGeometry args={[26, 32, 24]} /><Iron /></mesh>
+      <mesh position={[0, 15, 0]}><torusGeometry args={[15, 4.5, 14, 28, Math.PI]} /><Chrome /></mesh>
+    </group>
+  );
+}
+
+function PlateMesh() {
+  return (
+    <group>
+      <mesh><torusGeometry args={[26, 8.5, 20, 44]} /><Iron /></mesh>
+      <mesh><torusGeometry args={[26, 3, 16, 44]} /><Chrome /></mesh>
+    </group>
+  );
+}
+
+function GymObjects() {
+  return (
+    <group position={[0, 0, -60]}>
+      <Suspense fallback={null}>
+        <Environment preset="city" />
+      </Suspense>
+      <ambientLight intensity={0.25} />
+      <directionalLight position={[300, 500, 650]} intensity={1.1} color="#ffffff" />
+      <directionalLight position={[-450, -150, 350]} intensity={1.5} color="#ff7a1a" />
+      <Floating position={[-465, 170, 0]} scale={1.15} speed={0.9} tilt={0.4}><DumbbellMesh /></Floating>
+      <Floating position={[485, -70, -20]} scale={1.05} speed={1.1} tilt={-0.4}><KettlebellMesh /></Floating>
+      <Floating position={[430, 215, -70]} scale={0.85} speed={0.8} tilt={0.2}><PlateMesh /></Floating>
+      <Floating position={[-440, -155, -20]} scale={0.8} speed={1.2} tilt={-0.3}><KettlebellMesh /></Floating>
+      <Floating position={[380, -200, -60]} scale={0.72} speed={1.0} tilt={0.5}><DumbbellMesh /></Floating>
+      <Floating position={[-525, 25, -90]} scale={0.62} speed={0.85} tilt={0.15}><PlateMesh /></Floating>
+    </group>
+  );
+}
+
+export default function ParticleField({ onWord }) {
   const wrapRef = useRef(null);
   const [inView, setInView] = useState(true);
   const count = useMemo(() => getParticleCount(), []);
+  const showDumbbells = useMemo(() => window.innerWidth >= 1024, []);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -252,7 +333,8 @@ export default function ParticleField() {
         dpr={[1, 1.75]}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       >
-        <Particles count={count} />
+        {showDumbbells && <GymObjects />}
+        <Particles count={count} onWord={onWord} />
       </Canvas>
     </div>
   );

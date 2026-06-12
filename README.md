@@ -29,12 +29,53 @@ npm run preview  # locally preview the production build
 npm run lint     # check code for problems
 ```
 
-### Deploy
+## Deploy (this is a STATIC site — no Node server needed)
 
-Run `npm run build` and upload the generated **`dist/`** folder to any static
-host (Netlify, Vercel, Cloudflare Pages, GitHub Pages, etc.). On Netlify/Vercel
-you can also point them at this repo with build command `npm run build` and
-publish directory `dist`.
+This site does **not** run any server. `npm run build` turns it into plain
+HTML/CSS/JS/image files in the **`dist/`** folder. You upload those files to any
+ordinary web host. Nothing runs server-side — perfect for **DreamHost shared
+hosting**. There is no database and no `.htaccess` rewriting to set up.
+
+### Deploy to DreamHost (shared hosting)
+
+1. On your computer, in this folder, run the build:
+   ```bash
+   npm install      # first time only
+   npm run build
+   ```
+   This creates a **`dist/`** folder.
+
+2. Connect to your DreamHost site with **SFTP** (free apps: FileZilla, WinSCP)
+   or use the DreamHost **File Manager** (panel.dreamhost.com).
+   - Host/server, username and password are in your DreamHost panel under
+     *Websites → Manage Files / FTP users*.
+
+3. Open your domain's web folder on the server. It's usually:
+   ```
+   /home/<your-username>/<yourdomain.com>/
+   ```
+
+4. Upload **everything *inside* `dist/`** into that folder — i.e. `index.html`,
+   `gallery.html`, and the `assets/`, `equipment/`, `video/` folders and the
+   image files. (Upload the *contents* of `dist`, not the `dist` folder itself.)
+
+5. Visit your domain — done. ✅
+
+**To update the site later:** run `npm run build` again and re-upload the
+`dist` contents (overwrite). For small changes you can upload just the files
+that changed.
+
+> **Important:** deploy at the **root** of your domain or a subdomain
+> (e.g. `drcfitness.com` or `studio.drcfitness.com`). The site references files
+> with root paths like `/assets/...` and `/gallery.html`, so putting it in a
+> sub-folder (`drcfitness.com/site/`) would break the styling — if you need
+> that, tell me and I'll set a base path and rebuild.
+
+### Other static hosts
+
+The same `dist/` folder also drops straight onto Netlify, Vercel, Cloudflare
+Pages, or GitHub Pages (build command `npm run build`, publish directory
+`dist`).
 
 ---
 

@@ -22,7 +22,6 @@ import { Equipment } from './components/Equipment';
 import { Testimonials } from './components/Testimonials';
 import { Community } from './components/Community';
 import { Film } from './components/Film';
-import { Gallery } from './components/Gallery';
 import { Visit } from './components/Visit';
 import { Footer } from './components/Footer';
 import { WhatsAppFloat } from './components/WhatsAppFloat';
@@ -50,7 +49,6 @@ export default function DRCFitness() {
         <Trainer />
         <Equipment />
         <Film />
-        <Gallery />
         <Testimonials />
         <Community />
         <Visit />

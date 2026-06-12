@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { ArrowUpRight } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { LoopVideo } from './LoopVideo';
@@ -43,6 +44,9 @@ export function Film() {
         />
         <span className="film-tag mono-label">DRC · Pune</span>
       </div>
+      <a className="film-more" href="/gallery.html" data-reveal data-cursor-label="Open">
+        <span className="film-more-inner">View more photos <ArrowUpRight size={15} /></span>
+      </a>
     </section>
   );
 }

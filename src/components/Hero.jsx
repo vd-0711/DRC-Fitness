@@ -9,6 +9,14 @@ import { gsap } from 'gsap';
 
 const ParticleField = lazy(() => import('../three/ParticleField'));
 
+// As the particle mark morphs through these words, the matching photo fades in
+// behind it. Swap these paths for any image in /public to re-theme each word.
+const WORD_IMAGES = {
+  DRIVE: '/equipment/equip-01.jpg',
+  REBUILD: '/equipment/equip-04.jpg',
+  CONQUER: '/equipment/equip-08.jpg',
+};
+
 function HeroGlow() {
   return (
     <div
@@ -27,6 +35,7 @@ export function Hero({ time }) {
   const [counterRef, counterIntersecting] = useIntersectionObserver({ threshold: 0.5 });
   const [count, setCount] = useState(0);
   const [withParticles] = useState(() => enableParticles());
+  const [word, setWord] = useState('DRC');
   const ctaRef = useMagnetic({ strength: 0.5 });
 
   // Count-up for the "years of coaching" stat.
@@ -56,10 +65,21 @@ export function Hero({ time }) {
 
   return (
     <section className="hero" id="top" ref={sectionRef}>
+      <div className="hero-words" aria-hidden="true">
+        {Object.entries(WORD_IMAGES).map(([w, src]) => (
+          <div
+            key={w}
+            className={`hero-word-img ${word === w ? 'show' : ''}`}
+            style={{ backgroundImage: `url(${src})` }}
+          />
+        ))}
+        <div className="hero-words-grad" />
+      </div>
+
       {withParticles ? (
         <ErrorBoundary fallback={<HeroGlow />}>
           <Suspense fallback={<HeroGlow />}>
-            <ParticleField />
+            <ParticleField onWord={setWord} />
           </Suspense>
         </ErrorBoundary>
       ) : (
